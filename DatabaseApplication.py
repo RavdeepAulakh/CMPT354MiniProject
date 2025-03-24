@@ -81,20 +81,54 @@ def register_event():
 # Function to volunteer
 def volunteer():
     member_id = input("Enter your Member ID: ")
-    hours = input("Enter number of hours you can volunteer: ")
+    # Assuming the volunteer role is 'Volunteer', you can customize this as needed
+    role = 'Volunteer'
+    # Optionally, add contact details or any other required fields for the Personnel table
+    contact_details = input("Enter your contact details (optional): ")
 
-    cursor.execute("INSERT INTO Volunteer (MemberID, Hours) VALUES (?, ?)", (member_id, hours))
+    cursor.execute("INSERT INTO Personnel (Name, Role, ContactDetails) SELECT Name, ?, ? FROM Member WHERE MemberID = ?", 
+                   (role, contact_details, member_id))
     conn.commit()
     print("Thank you for volunteering!")
 
+
 # Function to ask for help
 def ask_help():
-    member_id = input("Enter your Member ID: ")
-    question = input("Describe your issue: ")
+    # List the available options
+    print("\nHelp Options:")
+    print("1. Help with borrowing an item")
+    print("2. Help with returning an item")
+    print("3. Help with donating an item")
+    print("4. Help with finding an event")
+    print("5. Help with registering for an event")
+    print("6. Help with volunteering")
 
-    cursor.execute("INSERT INTO HelpRequest (MemberID, Question) VALUES (?, ?)", (member_id, question))
-    conn.commit()
-    print("Your request has been submitted. A librarian will assist you shortly.")
+    # Ask the user to choose a help option
+    choice = input("Enter the number of the help option you want explained: ")
+
+    # Provide an explanation based on the choice
+    if choice == "1":
+        print("\nHelp with borrowing an item:")
+        print("To borrow an item, you need to find the item in the library and check its availability. If available, you can borrow it for 14 days.")
+    elif choice == "2":
+        print("\nHelp with returning an item:")
+        print("To return an item, you need the Borrow ID and the system will automatically update the item status to 'available'.")
+    elif choice == "3":
+        print("\nHelp with donating an item:")
+        print("You can donate an item by providing its title, type (e.g., book, DVD, or CD), and genre. The item will be added to the library collection.")
+    elif choice == "4":
+        print("\nHelp with finding an event:")
+        print("You can search for upcoming library events and see the event details, including the name, date, and location.")
+    elif choice == "5":
+        print("\nHelp with registering for an event:")
+        print("To register for an event, you need to choose an event and then register with your member ID to attend it.")
+    elif choice == "6":
+        print("\nHelp with volunteering:")
+        print("You can volunteer for the library by entering your member ID and optionally providing contact details. Your role will be set as 'Volunteer'.")
+    else:
+        print("Invalid option. Please choose a valid help option.")
+
+
 
 # Main Menu
 def main():
