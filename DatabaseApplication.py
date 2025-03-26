@@ -50,12 +50,34 @@ def return_item():
 # Function to donate an item
 def donate_item():
     title = input("Enter item title: ")
-    item_type = input("Enter item type (Book/DVD/CD): ")
-    genre = input("Enter item genre: ")
+    item_type = input("Enter item type (Book/DVD/CD or Other): ").strip().lower()
 
-    cursor.execute("INSERT INTO Item (Title, Type, Genre, Availability) VALUES (?, ?, ?, 1)", (title, item_type, genre))
+    if item_type in ["book", "dvd", "cd"]:
+        cursor.execute("INSERT INTO Item (Title, Type, Genre, Availability) VALUES (?, ?, ?, 1)", (title, item_type.upper(), None))
+        item_id = cursor.lastrowid  # Get the generated ItemID
+
+        if item_type == "book":
+            isbn = input("Enter ISBN: ")
+            author = input("Enter author: ")
+            publisher = input("Enter publisher (optional): ")
+            year = input("Enter year of publication: ")
+            edition = input("Enter edition (optional): ")
+
+            cursor.execute("INSERT INTO Book (ISBN, Title, Author, Publisher, Year, Edition, ItemID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                           (isbn, title, author, publisher, year, edition, item_id))
+
+        else:  # DVD or CD
+            artist = input("Enter artist (optional): ")
+            cursor.execute("INSERT INTO Multimedia (Title, Artist, Type, Genre, ItemID) VALUES (?, ?, ?, ?, ?)",
+                           (title, artist, item_type.upper(), None, item_id))
+
+    else:
+        genre = input("Enter item genre: ")
+        cursor.execute("INSERT INTO Item (Title, Type, Genre, Availability) VALUES (?, ?, ?, 1)", (title, "OTHER", genre))
+
     conn.commit()
     print("Thank you for your donation!")
+
 
 # Function to find an event
 def find_event():
