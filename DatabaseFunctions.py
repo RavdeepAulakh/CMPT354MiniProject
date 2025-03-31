@@ -226,6 +226,28 @@ def show_borrowed_items(member_id):
     return items
 
 
+def show_fines(member_id):
+    cursor.execute(
+        """
+        SELECT f.Amount, f.DueDate, f.PaidStatus 
+        FROM Fine f  
+        WHERE f.MemberID = ?
+    """,
+        (member_id,),
+    )
+
+    fines = cursor.fetchall()
+    if fines:
+        print("\nYour fines:")
+        for fine in fines:
+            print(
+                f"Amount: ${fine[0]}, Due Date: {fine[1]}, Paid: {'Yes' if fine[2] == '1' else 'No'}"
+            )
+    else:
+        print("You have no fines.")
+    return fines
+
+
 def show_registered_events(member_id):
     cursor.execute(
         """
@@ -260,10 +282,10 @@ def login_screen():
         print("Invalid option")
         result = None
 
-    if result:
-        print("\nUser Details:")
-        for key, value in result.items():
-            print(f"{key}: {value}")
+    # if result:
+    #     print("\nUser Details:")
+    #     for key, value in result.items():
+    #         print(f"{key}: {value}")
 
     return result
 

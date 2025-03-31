@@ -1,4 +1,5 @@
 from DatabaseFunctions import *
+from time import sleep
 
 
 def ask_help(choice=None):
@@ -62,7 +63,8 @@ def options_menu():
     print("8. Ask for help")
     print("9. View my borrowed items")
     print("10. View my registered events")
-    print("11. Exit")
+    print("11. Show my fines")
+    print("12. Exit")
 
     choice = input("\nEnter your choice: ")
     return choice
@@ -74,18 +76,19 @@ def main():
 
     member_id = userDetails.get("member_id")
 
-    show_borrowed_items(member_id=member_id)
+    # show_borrowed_items(member_id=member_id)
+
+    show_fines(member_id=member_id)
 
     while True:
         print(("\n\n" + "=" * 100))
         print(f"Logged in as: {userDetails.get("name")}  ||  Member ID: {member_id}")
-        view_books()
 
         choice = options_menu()
 
         match choice:
             case "1":
-                find_item(title=input("Enter title: "))
+                find_item(title=input("Enter title or press <Enter> to see all: "))
             case "2":
                 borrow_item(
                     member_id=member_id,
@@ -124,10 +127,13 @@ def main():
             case "10":
                 show_registered_events(member_id)
             case "11":
+                show_fines(member_id=member_id)
+            case "12":
                 print("Goodbye!")
                 break
             case _:
                 print("Not a Valid option")
+        input("\nPress enter to continue")
 
 
 if __name__ == "__main__":
