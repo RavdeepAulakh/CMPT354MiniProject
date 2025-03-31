@@ -99,7 +99,7 @@ def donate_item(title=None, item_type=None, bookInfo=None, artist=None, genre=No
 
     if item_type in ["book", "dvd", "cd"]:
         cursor.execute(
-            "INSERT INTO Item (Title, Type, Genre, Availability) VALUES (?, ?, ?, 1)",
+            "INSERT INTO Item (Title, Type, Genre, Availability, DateAdded) VALUES (?, ?, ?, 1, date('now'))",
             (title, item_type.upper(), None),
         )
         item_id = cursor.lastrowid  # Get the generated ItemID
