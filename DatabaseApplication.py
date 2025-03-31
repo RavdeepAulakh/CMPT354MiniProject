@@ -27,7 +27,7 @@ def find_item(title=None):
 # Function to borrow an item
 def borrow_item(member_id=None, item_id=None):
     if member_id == None and item_id == None:
-        member_id = input("Enter your Member ID: ")     
+        member_id = input("Enter your Member ID: ")
         item_id = input("Enter Item ID to borrow: ")
 
     cursor.execute("SELECT Availability FROM Item WHERE ItemID = ?", (item_id,))
@@ -46,11 +46,11 @@ def borrow_item(member_id=None, item_id=None):
         print("Item is not available.")
         return 1
 
+
 # Function to return an item
 def return_item(member_id=None, borrow_id=None):
     if not member_id:
-        member_id = ("enter your member id: ")
-
+        member_id = "enter your member id: "
 
     if borrow_id == None:
         borrow_id = input("Enter Borrow ID: ")
@@ -147,12 +147,15 @@ def register_event(event_id=None, member_id=None):
     if event_id == None or member_id == None:
         event_id = input("Enter Event ID: ")
         member_id = input("Enter your Member ID: ")
-
-    cursor.execute(
-        "INSERT INTO Attends (EventID, MemberID) VALUES (?, ?)", (event_id, member_id)
-    )
-    conn.commit()
-    print("Event registration successful!")
+    try:
+        cursor.execute(
+            "INSERT INTO Attends (EventID, MemberID) VALUES (?, ?)",
+            (event_id, member_id),
+        )
+        conn.commit()
+        print("Event registration successful!")
+    except sqlite3.IntegrityError:
+        print("Already registered")
     return 0
 
 
