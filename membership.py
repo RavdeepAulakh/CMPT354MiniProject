@@ -72,7 +72,10 @@ def options_menu():
 
 def main():
     # Log in or Sign Up
-    userDetails = login_screen()
+    userDetails = None
+    while userDetails == None:
+        userDetails = login_screen()
+        print("\n")
 
     member_id = userDetails.get("member_id")
 

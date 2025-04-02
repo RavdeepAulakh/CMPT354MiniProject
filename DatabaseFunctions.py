@@ -187,7 +187,10 @@ def return_item(member_id=None, item_id=None):
     if item_id == None:
         item_id = input("Enter Borrow ID: ")
 
-    cursor.execute("SELECT ItemID FROM Borrow WHERE ItemID = ?", (item_id,))
+    cursor.execute(
+        "SELECT ItemID FROM Borrow WHERE ItemID = ? AND MemberID = ?",
+        (item_id, member_id),
+    )
     item = cursor.fetchone()
 
     if item:
@@ -311,6 +314,17 @@ def register_event(event_id=None, member_id=None):
     if event_id == None or member_id == None:
         event_id = input("Enter Event ID: ")
         member_id = input("Enter your Member ID: ")
+
+    try:
+        cursor.execute("SELECT * FROM Event WHERE EventID = ?", (event_id,))
+        event = cursor.fetchone()
+        if event is None:
+            print("Error: Event ID does not exist.")
+            return 0
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        return 0
+
     try:
         cursor.execute(
             "INSERT INTO Attends (EventID, MemberID) VALUES (?, ?)",
